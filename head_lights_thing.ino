@@ -7,7 +7,7 @@ int buttonCount = 0;
 int looper = 0;
 
 void setup() {
-  pinMode(buttonPin, INPUT); 
+  pinMode(buttonPin, INPUT);
 }
 
 void loop() {
@@ -15,40 +15,40 @@ void loop() {
   analogWrite(ledPinGreen, 120);
   analogWrite(ledPinBlue, 0);
   buttonInput = digitalRead(buttonPin);
-  while(looper = 0)
+  while (looper = 0)
   {
     buttonCount++;
     buttonInput = LOW;
     delay(250);
     buttonInput = digitalRead(buttonPin);
-       if (buttonInput == HIGH)
-       {
-         looper = 0;
-       }
-       else
-       {
-          looper = 1;
-       }
+    if (buttonInput == HIGH)
+    {
+      looper = 0;
+    }
+    else
+    {
+      looper = 1;
+    }
   }
   looper = 0;
   if (buttonCount == 1)
   {
-   while (looper == 0)
-   {
-    for (int fadeValue = 0; fadeValue <= 255; fadeValue +=2)
+    while (looper == 0)
+    {
+      for (int fadeValue = 0; fadeValue <= 255; fadeValue += 2)
       {
-        analogWrite(ledPinRed,fadeValue);
-        analogWrite(ledPinGreen, fadeValue/2);
+        analogWrite(ledPinRed, fadeValue);
+        analogWrite(ledPinGreen, fadeValue / 2);
       }
-     buttonInput = digitalRead(buttonPin);
-     if (buttonInput == HIGH)
-     {
-      looper = 1;
-     }
-     else
-     {
-      looper = 0;
-     }
+      buttonInput = digitalRead(buttonPin);
+      if (buttonInput == HIGH)
+      {
+        looper = 1;
+      }
+      else
+      {
+        looper = 0;
+      }
     }
   }
   looper = 0;
