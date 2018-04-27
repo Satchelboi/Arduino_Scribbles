@@ -45,7 +45,7 @@ void loop() {
   }
 
   // Check if button was released after being pressed and store time in state
-  if (buttonInput == HIGH && buttonBuff == LOW && (millis() - buttonDown) > holdTimeBlink) {
+  if (buttonInput == HIGH && buttonBuff == LOW && (millis() - buttonDown) > holdTimeBlink && (millis() - buttonDown) < holdTimeShift) {
     if (ignoreRelease == false)
       fade();
     else
