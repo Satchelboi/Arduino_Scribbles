@@ -6,13 +6,13 @@
 // Blink -> Press and hold button for 0.5 seconds
 // Shift -> Press and hold button for 2.0 seconds
 
-#define debounce 20
-#define holdTimeBlink  500
-#define holdTimeShift 2000
-#define buttonPin  2
-#define ledPinRed  9
-#define ledPinGreen  10
-#define ledPinBlue 11
+const int debounce = 20;
+const int holdTimeBlink = 500;
+const int holdTimeShift = 2000;
+const int buttonPin = 19;
+const int ledPinRed = 9;
+const int ledPinGreen = 10;
+const int ledPinBlue = 11;
 int buttonInput = 0;
 int buttonBuff = 0;
 long buttonDown;
@@ -21,53 +21,59 @@ bool ignoreRelease = false;
 
 void setup() {
 
+  Serial.begin(9600);
+
   pinMode(buttonPin, INPUT);
-  digitalWrite(buttonPin, HIGH);
+  digitalWrite(buttonPin, LOW);
 
   pinMode(ledPinRed, OUTPUT);
   pinMode(ledPinGreen, OUTPUT);
   pinMode(ledPinBlue, OUTPUT);
 
-  analogWrite(ledPinRed, 0);
-  analogWrite(ledPinGreen, 0);
+  analogWrite(ledPinRed, 255);
+  analogWrite(ledPinGreen, 100);
   analogWrite(ledPinBlue, 0);
 }
 
 void loop() {
-
-  buttonInput = digitalRead(buttonPin);
+  buttonDown = 0;
+  buttonInput = LOW;
   analogWrite(ledPinRed, 255);
   analogWrite(ledPinGreen, 100);
-
+  buttonInput = digitalRead(buttonPin);
+  Serial.println("Loop just started");
   // Check if button is not pressed and record time if not pressed
-  if (buttonInput == LOW && buttonBuff == HIGH && (millis() - buttonUp) < debounce) {
+  if (buttonInput == HIGH) {
     buttonDown = millis();
+    Serial.println("Button Read");
   }
 
   // Check if button was released after being pressed and store time in state
-  if (buttonInput == HIGH && buttonBuff == LOW && (millis() - buttonDown) > holdTimeBlink) {
-    if (ignoreRelease == false)
+  if (buttonDown > long(debounce) && buttonDown < long(holdTimeBlink)) {
+    if (ignoreRelease == false) {
+      Serial.println("Fade function called");
       fade();
+    }
     else
       ignoreRelease = false;
     buttonUp = millis();
   }
 
   // Check if button time held is past that holdTimeBlink variable
-  if (buttonInput == LOW && (millis() - buttonDown) > holdTimeBlink && (millis() - buttonDown) < holdTimeShift) {
+  if (buttonDown > long(holdTimeBlink) && buttonDown < long(holdTimeShift)) {
+    Serial.println("Blinker function called");
     blinker();
     ignoreRelease = true;
     buttonDown = millis();
   }
 
   // Check if button time held is past the holdTimeShift variable
-  if (buttonInput == LOW && (millis() - buttonDown) > holdTimeShift) {
+  if (buttonDown > long(holdTimeShift)) {
+    Serial.println("Shift function called");
     shift();
     ignoreRelease = true;
     buttonDown = millis();
   }
-
-  buttonBuff = buttonInput;
 
 }
 
@@ -100,31 +106,36 @@ void shift() {
   // Turns Green up
   for (shiftValue = 0; shiftValue <= 255; shiftValue += 1) {
     analogWrite(ledPinGreen, shiftValue);
+    delay(8);
   }
 
   // Turns Red down
   for (shiftValue = 255; shiftValue >= 0; shiftValue -= 1) {
     analogWrite(ledPinRed, shiftValue);
+    delay(8);
   }
 
   // Turns Blue up
   for (shiftValue = 0; shiftValue <= 255; shiftValue += 1) {
     analogWrite(ledPinBlue, shiftValue);
+    delay(8);
   }
 
   // Turns Green down
   for (shiftValue = 255; shiftValue >= 0; shiftValue -= 1) {
     analogWrite(ledPinGreen, shiftValue);
+    delay(8);
   }
 
   // Turns Red up
   for (shiftValue = 0; shiftValue <= 255; shiftValue += 1) {
     analogWrite(ledPinRed, shiftValue);
+    delay(8);
   }
 
   // Turns Blue down
   for (shiftValue = 255; shiftValue >= 0; shiftValue -= 1) {
     analogWrite(ledPinBlue, shiftValue);
+    delay(8);
   }
 }
-
